@@ -1,0 +1,38 @@
+#caminho para o arquivo com os accession numbers (apenas um arquivo de texto com um accession number por linha)
+ACCESSION_FILE="/temporario2/9290665/DADOS_PARKINSON/wallen/ACCESSION_FILE_WALLEN"
+
+# Diretório de destino
+SRA_DIR="/temporario2/9290665/DADOS_PARKINSON/wallen/sra_files"
+FASTQ_DIR="/temporario2/9290665/DADOS_PARKINSON/wallen/fastq_files"
+
+# Criar diretórios se não existirem
+mkdir -p $SRA_DIR
+mkdir -p $FASTQ_DIR
+
+# Loop para percorrer cada acession number no arquivo
+while read ACCESSION; do
+    echo "Baixando $ACCESSION..."
+
+    # Baixar o arquivo .sra
+    prefetch --output-directory $SRA_DIR $ACCESSION
+
+    if [ $? -eq 0 ]; then
+        echo "$ACCESSION baixado com sucesso. Convertendo para FASTQ..."
+
+        # Caminho do arquivo SRA baixado
+        SRA_FILE="$SRA_DIR/$ACCESSION/$ACCESSION.sra"
+
+        # Converter para FASTQ
+        fastq-dump --split-3 --gzip -O $FASTQ_DIR $SRA_FILE
+
+        if [ $? -eq 0 ]; then
+            echo "$ACCESSION convertido para FASTQ com sucesso!"
+        else
+            echo "Erro na conversão de $ACCESSION para FASTQ!"
+        fi
+    else
+        echo "Erro ao baixar $ACCESSION!"
+    fi
+done < "$ACCESSION_FILE"
+
+echo "Processo concluído!"
