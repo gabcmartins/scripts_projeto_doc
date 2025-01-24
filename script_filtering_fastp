@@ -1,0 +1,34 @@
+#Scrip para filtragem utilizando fastp - OBS: sempre conferir para ver se não travou ao encontrar arquivo fastq corrompido
+#Caso tenha problemas com uma amostra: conferir a qualidade utilizando seqkit #Exemplo: seqkit stats ERR9578161.fastq.gz
+# Diretório com os arquivos
+INPUT_DIR="/temporario2/9290665/DADOS_ALZHEIMER/laske"
+OUTPUT_DIR="/temporario2/9290665/DADOS_ALZHEIMER/laske/outputs_fastp"
+
+# Cria o diretório de saída, se não existir
+mkdir -p "$OUTPUT_DIR"
+
+# Loop pelos arquivos _1.fastq.gz
+for FILE1 in "$INPUT_DIR"/*_1.fastq.gz; do
+    # Extrai o nome base da amostra (remove o sufixo "_1.fastq.gz")
+    BASENAME=$(basename "$FILE1" "_1.fastq.gz")
+
+    # Define o arquivo do segundo par
+    FILE2="${INPUT_DIR}/${BASENAME}_2.fastq.gz"
+
+    # Define os arquivos de saída
+    OUTPUT1="${OUTPUT_DIR}/${BASENAME}_filtered_1.fastq.gz"
+    OUTPUT2="${OUTPUT_DIR}/${BASENAME}_filtered_2.fastq.gz"
+
+    # Executa o Fastp para o par de arquivos
+    echo "Processando $BASENAME..."
+    fastp -i "$FILE1" -I "$FILE2" -o "$OUTPUT1" -O "$OUTPUT2"
+
+    # Verifica se o comando foi bem-sucedido
+    if [ $? -ne 0 ]; then
+        echo "Erro ao processar $BASENAME!" >&2
+        exit 1
+    fi
+done
+
+echo "Processamento concluído!"
+exit 0
