@@ -1,0 +1,21 @@
+#Baixando genoma humano e indexando utilizando bowtie2
+#!/bin/bash
+eval "$(conda shell.bash hook)"
+
+# Ativa o ambiente Conda com Bowtie2
+conda activate bowtie2_env
+
+# Defina o diretório onde o genoma será baixado
+GENOME_DIR=~/genoma_humano
+
+# Baixa o genoma humano (GRCh38)
+cd $GENOME_DIR
+wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405/GCF_000001405.40_GRCh38.p14/GCF_000001405.40_GRCh38.p14_genomic.fna.gz
+
+# Descompacta o arquivo baixado
+gunzip GCF_000001405.40_GRCh38.p14_genomic.fna.gz
+
+# Cria o índice do genoma com o Bowtie2
+bowtie2-build GCF_000001405.40_GRCh38.p14_genomic.fna GRCh38_index
+
+echo "Índice do genoma humano criado com sucesso!"
