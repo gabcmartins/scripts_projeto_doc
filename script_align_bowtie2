@@ -26,3 +26,4 @@ bowtie2 -x $GENOME_INDEX_PATH \
   -S $OUTPUT_PATH/${BASENAME}_aligned.sam
 
 done
+#OBS: o bowtie gera com output um único file contendo o alinhamento de ambas as sequencias(forward e reverse) 
