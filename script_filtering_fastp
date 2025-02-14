@@ -21,7 +21,8 @@ for FILE1 in "$INPUT_DIR"/*_1.fastq.gz; do
 
     # Executa o Fastp para o par de arquivos
     echo "Processando $BASENAME..."
-    fastp -i "$FILE1" -I "$FILE2" -o "$OUTPUT1" -O "$OUTPUT2" --detect_adapter_for_pe
+    fastp -i "$FILE1" -I "$FILE2" -o "$OUTPUT1" -O "$OUTPUT2" --detect_adapter_for_pe #(não é estritamente necessário, a metodologia default é remoção de adaptadores por comparação das sequencias forward e reverse,
+#a comparação entre ambos os métodos só gerou 0.01% a mais de remoção utilizando detect adapter em sequencias ja previamente limpas)
 
     # Verifica se o comando foi bem-sucedido
     if [ $? -ne 0 ]; then
