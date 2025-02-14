@@ -1,0 +1,24 @@
+# Definir os caminhos
+FASTQ_PATH="/temporario2/9290665/DADOS_ALZHEIMER/laske/cleaned_reads"
+OUTPUT_PATH="/temporario2/9290665/DADOS_ALZHEIMER/laske/outputs_flash"
+
+# Criar a pasta de saída, se não existir
+mkdir -p "$OUTPUT_PATH"
+
+# Loop para processar todos os arquivos *_R1.fastq na pasta FASTQ_PATH
+for FILE1 in "$FASTQ_PATH"/*_R1.fastq; do
+  # Obter o nome base da amostra (remover o sufixo _R1.fastq)
+  BASENAME=$(basename "$FILE1" _R1.fastq)
+
+  # Definir o arquivo correspondente para o par _R2.fastq
+  FILE2="${FASTQ_PATH}/${BASENAME}_R2.fastq"
+
+  # Verificar se o arquivo _R2.fastq existe
+  if [ -f "$FILE2" ]; then
+    # Merging com FLASH
+    flash -m 20 -M 150 --to-stdout "$FILE1" "$FILE2" > "${OUTPUT_PATH}/${BASENAME}.merged.fastq" #m20: baseado no min de merge do fastp que é 30 e o default do flash que é 10. 
+# -M 150: evita o WARNING do FLASH dizendo que muitas sequencias se sobrepoe mais que o parametro porem nao mudou a porcentagem de merge 
+  else
+    echo "Par do arquivo $FILE1 não encontrado: $FILE2" >&2
+  fi
+done
