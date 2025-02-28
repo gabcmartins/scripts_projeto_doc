@@ -1,0 +1,5 @@
+INPUT="/temporario2/9290665/mucin_proteins_db/faa_files/GH98.fasta" 
+
+cd-hit -i $INPUT -o nr_GH98.fasta -c 1.00
+
+#arquivos .out estão em ~/mucin_proteins_db/nr_faa_files/out
