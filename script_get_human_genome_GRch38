@@ -1,21 +1,26 @@
-#Baixando genoma humano e indexando utilizando bowtie2
+#!/bin/bash
+# Dependencies: Bowtie2, wget, gunzip
+# Install:
+#   conda install -c bioconda bowtie2
+#   sudo apt install wget gzip  # (For Ubuntu/Debian)
+# Downloading the human genome and indexing using Bowtie2
 #!/bin/bash
 eval "$(conda shell.bash hook)"
 
-# Ativa o ambiente Conda com Bowtie2
+# Activate the Conda environment with Bowtie2 (only if need be)
 conda activate bowtie2_env
 
-# Defina o diretório onde o genoma será baixado
-GENOME_DIR=~/genoma_humano
+# Define the directory where the genome will be downloaded
+GENOME_DIR=~/human_genome
 
-# Baixa o genoma humano (GRCh38)
+# Download the human genome (GRCh38)
 cd $GENOME_DIR
 wget https://ftp.ncbi.nlm.nih.gov/genomes/all/GCF/000/001/405/GCF_000001405.40_GRCh38.p14/GCF_000001405.40_GRCh38.p14_genomic.fna.gz
 
-# Descompacta o arquivo baixado
+# Decompress the downloaded file
 gunzip GCF_000001405.40_GRCh38.p14_genomic.fna.gz
 
-# Cria o índice do genoma com o Bowtie2
+# Create the genome index with Bowtie2
 bowtie2-build GCF_000001405.40_GRCh38.p14_genomic.fna GRCh38_index
 
-echo "Índice do genoma humano criado com sucesso!"
+echo "Human genome index successfully created!"
