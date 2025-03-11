@@ -1,29 +1,35 @@
-#Ativar o ambiente Conda
+#!/bin/bash
+# Dependencies: Bowtie2
+# Install:
+#   conda install -c bioconda bowtie2
+
+# Activate the Conda environment -- if need be
 eval "$(conda shell.bash hook)"
 conda activate bowtie2_env
 
-# Definir os caminhos
+# Define paths
 FASTQ_PATH="/temporario2/9290665/DADOS_ALZHEIMER/laske/outputs_fastp"
 GENOME_INDEX_PATH="/temporario2/9290665/genoma_humano/GRCh38_index"
 OUTPUT_PATH="/temporario2/9290665/DADOS_ALZHEIMER/laske/outputs_bowtie2"
 
-# Criar a pasta de saída, se não existir
+# Create the output directory if it doesn't exist
 mkdir -p $OUTPUT_PATH
 
-# Loop para processar todos os arquivos *_1.fastq.gz na pasta FASTQ_PATH
+# Loop through all *_1.fastq.gz files in the FASTQ_PATH
 for FILE1 in $FASTQ_PATH/*_1.fastq.gz; do
-  # Obter o nome base da amostra (sem o sufixo _1.fastq.gz)
+  # Get the base name of the sample (without the _1.fastq.gz suffix)
   BASENAME=$(basename $FILE1 _1.fastq.gz)
   
-  # Definir o arquivo correspondente para o par _2.fastq.gz
+  # Define the corresponding file for the _2.fastq.gz pair
   FILE2="${FASTQ_PATH}/${BASENAME}_2.fastq.gz"
 
-# Alinhamento com Bowtie2
-bowtie2 -x $GENOME_INDEX_PATH \
-  -1 $FILE1 \
-  -2 $FILE2 \
-  --threads 8 \
-  -S $OUTPUT_PATH/${BASENAME}_aligned.sam
+  # Alignment with Bowtie2
+  bowtie2 -x $GENOME_INDEX_PATH \
+    -1 $FILE1 \
+    -2 $FILE2 \
+    --threads 8 \
+    -S $OUTPUT_PATH/${BASENAME}_aligned.sam
 
 done
-#OBS: o bowtie gera com output um único file contendo o alinhamento de ambas as sequencias(forward e reverse) 
+
+# NOTE: Bowtie2 generates a single output file containing the alignment of both sequences (forward and reverse).
