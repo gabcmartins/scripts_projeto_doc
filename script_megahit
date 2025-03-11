@@ -1,6 +1,11 @@
+#!/bin/bash
+# Dependencies: MEGAHIT
+# Install:
+#   conda install -c bioconda megahit
+
 #define pathways
 FASTQ_PATH="/temporario2/9290665/DADOS_ALZHEIMER/laske/cleaned_reads_1/"
-MERGED_PATH="/temporario2/9290665/DADOS_ALZHEIMER/laske/outputs_flash_1/"
+MERGED_PATH="/temporario2/9290665/DADOS_ALZHEIMER/laske/outputs_flash_1/"   #extra file with merged sequences for better assembling
 OUTPUT_PATH="/temporario2/9290665/DADOS_ALZHEIMER/laske/megahit_outputs/"
 
 #Create output directory if not there
