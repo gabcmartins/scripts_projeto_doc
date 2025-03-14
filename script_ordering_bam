@@ -1,0 +1,44 @@
+#Activate conda environment
+eval "$(conda shell.bash hook)"
+conda activate bowtie2_env
+
+# Caminho da pasta com os arquivos .sam
+SAM_DIR="/temporario2/9290665/DADOS_ALZHEIMER/laske/contigs_reads_aligned"
+# Caminho onde salvar os arquivos .bam ordenados
+OUTPUT_DIR="/temporario2/9290665/DADOS_ALZHEIMER/laske/ordened_bams"
+
+mkdir -p $OUTPUT_DIR
+
+for SAM_FILE in $SAM_DIR/*.sam; do
+    # Extrair o nome base do arquivo (sem extensão)
+    BASENAME=$(basename "$SAM_FILE" .sam)
+
+    # Definir nomes dos arquivos intermediários e finais
+    BAM_FILE="$OUTPUT_DIR/$BASENAME.bam"
+    SORTED_BAM="$OUTPUT_DIR/${BASENAME}_sorted.bam"
+
+    # Converter SAM para BAM
+    echo "Convertendo $SAM_FILE para BAM..."
+    samtools view -S -b "$SAM_FILE" > "$BAM_FILE"
+    if [ $? -eq 0 ]; then
+        echo "Removendo $SAM_FILE..."
+        rm -f "$SAM_FILE"
+    else
+        echo "Erro ao converter $SAM_FILE. Mantendo para debug."
+        continue
+    fi
+
+    # Ordenar BAM
+    echo "Ordenando $BAM_FILE..."
+    samtools sort "$BAM_FILE" -o "$SORTED_BAM"
+    if [ $? -eq 0 ]; then
+        echo "Removendo o arquivo BAM intermediário $BAM_FILE..."
+        rm -f "$BAM_FILE"
+    else
+        echo "Erro ao ordenar $BAM_FILE. Mantendo o arquivo para debug."
+    fi
+
+    echo "Processamento de $SAM_FILE concluído!"
+done
+
+echo "Todos os arquivos foram processados com sucesso!"
