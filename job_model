@@ -10,7 +10,7 @@
 #SBATCH --mail-user=gabriela.castilho.martins@usp.br
 #OpenMP settings:
 export OMP_NUM_THREADS=1
-export MKL_NUM_THREADS=1qq
+export MKL_NUM_THREADS=1
 export OMP_PLACES=threads
 export OMP_PROC_BIND=spread
 
