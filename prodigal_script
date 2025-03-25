@@ -1,3 +1,8 @@
+#!/bin/bash
+# Dependencies: Prodigal
+# Install:
+# conda install bioconda::prodigal
+
 #path to folders
 MEGAHIT_DIR=~/DADOS_ALZHEIMER/laske/megahit_outputs_2
 OUTPUT_DIR=~/DADOS_ALZHEIMER/laske/prodigal_outputs
