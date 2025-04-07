@@ -1,0 +1,21 @@
+import pandas as pd
+
+# File paths
+unified_file = "/content/drive/MyDrive/Doutorado/dados_unificados.tsv"
+samples_file = "/content/drive/MyDrive/Doutorado/amostras.csv"
+output_file = "/content/drive/MyDrive/Doutorado/dados_unificados_com_grupo.tsv"
+
+# Load the unified data table (must contain columns like Sample, Protein, Abundance, etc.)
+df_unified = pd.read_csv(unified_file, sep='\t')
+
+# Load the sample metadata file
+# This file must contain a mapping between each sample ID and its corresponding group (e.g., Disease or Control)
+df_samples = pd.read_csv(samples_file)
+df_samples.rename(columns={'Run Accession': 'Sample', 'AMYLOID': 'Group'}, inplace=True)
+
+# Merge group information into the unified table
+df_final = df_unified.merge(df_samples[['Sample', 'Group']], on='Sample', how='left')
+
+# Save the final table with group information added
+df_final.to_csv(output_file, sep='\t', index=False)
+print(f"Data saved to: {output_file}")
