@@ -17,8 +17,8 @@ OUTPUT_DIR="/temporario2/9290665/DADOS_ALZHEIMER/laske/idxstats"
 mkdir -p "$OUTPUT_DIR"
 
 # Loop through only the selected BAM files
-for base_name in ERR9578187 ERR9578188 ERR9578189; do
-    sorted_bam="$INPUT_DIR/${base_name}.sorted.bam"
+for sorted_bam in "$INPUT_DIR"/*.sorted.bam; do
+    base_name=$(basename "$sorted_bam" .sorted.bam)
     echo "Processing: $base_name"
 
     # Index BAM file
