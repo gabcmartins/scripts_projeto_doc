@@ -20,5 +20,6 @@ Generating genes relative abundance
 5. To filter the best aligments of diamond output, use: filtering_diamong_output
 6. To organize idxstats output and calculate RPKM for normalization, use: treating_idxstats
 7. To merge idxstats results with diamond output (now you will actually have rpkm and cds matches): joining_idxstats_diamond
-Important: scripts 5,6 and 7 of this list are in Python. 
+
+#Important: scripts 5,6 and 7 of this list are in Python. 
    
