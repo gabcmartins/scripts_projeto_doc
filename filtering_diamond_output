@@ -61,7 +61,7 @@ for arquivo in arquivos:
     # Lê o arquivo
     df = pd.read_csv(arquivo, sep='\t')
 
-    # Aplica o filtro (evalue <= 1e-4)
+    # Aplica o filtro 
     df_filtrado = df[(df['qlen/slen'] >= 0.7) & (df['qlen/slen'] <= 1.5)]
    
     # Salva sobrescrevendo o arquivo original
