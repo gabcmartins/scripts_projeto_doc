@@ -1,9 +1,7 @@
 import pandas as pd
 import glob
 arquivos= glob.glob ("/home/gabrielacastilho/outputs_diamond/*.tsv")
-colunas = ["qseqid", "sseqid", "pident", "length", "qlen", "slen", "mismatch", "gapopen",
-           "evalue", "bitscore"]
-
+colunas = ["qseqid", "sseqid", "pident", "length", "qlen", "slen", "evalue", "bitscore"]
 
 for arquivo in arquivos:
     # Lê o arquivo sem cabeçalho e atribui os nomes das colunas
@@ -11,13 +9,6 @@ for arquivo in arquivos:
     
     # Salva com cabeçalho incluso (pode sobrescrever ou salvar como novo)
     df.to_csv(arquivo, sep="\t", index=False)
-    
-for arquivo in arquivos:
-    # Lê o arquivo e exclui as colunas mismatch e gapopen
-    df = pd.read_csv(arquivo, sep="\t")
-    df2= df.loc[:, ~df.columns.isin(['mismatch', 'gapopen'])]
-    # Salva com cabeçalho incluso (pode sobrescrever ou salvar como novo)
-    df2.to_csv(arquivo, sep="\t", index=False)
  
 for arquivo in arquivos:
     # Lê o arquivo e mantém somente linhas com pident >= 40)
