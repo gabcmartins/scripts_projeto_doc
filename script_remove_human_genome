@@ -14,15 +14,15 @@ for SAM_FILE in "$INPUT_DIR"/*.sam; do
   BASENAME=$(basename "$SAM_FILE" .sam)
   
   # Convert and filter SAM -> BAM
-  samtools view -@ 8 -b -f 12 -F 256 "$SAM_FILE" > "$OUTPUT_DIR/${BASENAME}_filtered.bam" 
+    samtools view -@ 8 -b -f 12 -F 256 -o "$OUTPUT_DIR/${BASENAME}_filtered.bam" "$SAM_FILE"
   # @8 uses 8 threads, -f 12 ensures that only reads where neither the primary read (flag 4) nor the pair (flag 8) are aligned are kept
   # -F 256 excludes secondary alignments, which are usually not useful for basic analysis.
   # Filtering options: -f (require flags): have all of the flags present, -F exclude flags: have none of the flags present
 
   #sort BAM files for safety 
-
+  samtools sort -n "$OUTPUT_DIR/${BASENAME}_filtered.bam" -o "$OUTPUT_DIR/${BASENAME}_filtered_sorted.bam" 
   # Convert BAM to FASTQ
-  samtools fastq -@ 8 -1 "$OUTPUT_DIR/${BASENAME}_R1.fastq" -2 "$OUTPUT_DIR/${BASENAME}_R2.fastq" "$OUTPUT_DIR/${BASENAME}_filtered.bam"
+  samtools fastq -@ 8 -1 "$OUTPUT_DIR/${BASENAME}_R1.fastq" -2 "$OUTPUT_DIR/${BASENAME}_R2.fastq" "$OUTPUT_DIR/${BASENAME}_filtered_sorted.bam"
   
   # Remove intermediate file (optional)
   rm "$OUTPUT_DIR/${BASENAME}_filtered.bam"
