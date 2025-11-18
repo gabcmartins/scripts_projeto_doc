@@ -1,5 +1,5 @@
 #Step 1: adding a header 
-arquivos= sorted(glob.glob ("/home/gabrielacastilho/idxstats/*.idxstats.txt")
+arquivos= sorted(glob.glob ("/home/gabrielacastilho/idxstats/*.idxstats.txt"))
 
 colunas = ["CDS", "lenght", "mapped_reads", "unmapped_reads"]
 
