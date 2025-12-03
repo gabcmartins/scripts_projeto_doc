@@ -1,3 +1,6 @@
+#!/bin/bash
+# Dependencies: cd-hit
+# Install: conda install -c bioconda cdhit
 
 INPUT="/temporario2/9290665/mucin_proteins_db/faa_files/GH98.fasta" 
 
