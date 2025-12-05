@@ -1,0 +1,14 @@
+PRODIGAL_PATH="/media/Spock/gabicas/boktor/prodigal_outputs"
+OUTPUT_PATH="/media/Spock/gabicas/boktor/prodigal_outputs/cdhit_clustered"
+
+mkdir -p "$OUTPUT_PATH"
+
+for FILE in "$PRODIGAL_PATH"/*.faa; do
+    BASENAME=$(basename "$FILE" .faa)
+    OUTPUT_FILE="$OUTPUT_PATH/${BASENAME}_c95.faa"
+
+    echo "Running cdhit for $FILE..."
+    cd-hit -i "$FILE" -o "$OUTPUT_FILE" -c 0.95
+done
+
+echo "Finished"
