@@ -1,0 +1,36 @@
+#   conda install -c bioconda bowtie2
+# Activate the Conda environment -- if need be
+eval "$(conda shell.bash hook)"
+conda activate bowtie2_env
+
+# Define paths
+FASTQ_PATH="/path/to/file/cleaned_reads"
+INDEX_FILE="/path/to/file/cds_reference_fna_indexed"  # prefix of bowtie2 index files (.bt2)
+OUTPUT_PATH="/path/to/file/fna_reads_aligned"
+
+# Create the output directory if it doesn't exist
+mkdir -p $OUTPUT_PATH
+
+# Loop through all *_filtered_1.fastq.gz files in the FASTQ_PATH
+for FILE1 in "$FASTQ_PATH"/*_filtered_1.fastq.gz; do
+  # Get the base name of the sample (without the _filtered_1.fastq.gz suffix)
+  BASENAME=$(basename "$FILE1" "_filtered_1.fastq.gz")
+
+  # Define the corresponding reverse reads file
+  FILE2="${FASTQ_PATH}/${BASENAME}_filtered_2.fastq.gz"
+
+  # Check if both read files exist
+  if [[ -f "$FILE1" && -f "$FILE2" ]]; then
+    echo "Processing sample: $BASENAME"
+
+    bowtie2 -x "$INDEX_FILE" \
+      -1 "$FILE1" \
+      -2 "$FILE2" \
+      --threads 10 \        # number of threads
+      --no-unal \           # suppress unaligned reads from SAM output (reduces file size significantly in metagenomic datasets)
+      2> "$OUTPUT_PATH/${BASENAME}_bowtie2.log" \   # per-sample alignment stats (% mapped, etc.)
+      -S "$OUTPUT_PATH/${BASENAME}_aligned_fna.sam" # output SAM file
+  else
+    echo "Warning: Missing pair for $BASENAME. Skipping."
+  fi
+done
