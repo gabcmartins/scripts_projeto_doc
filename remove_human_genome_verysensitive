@@ -1,0 +1,36 @@
+#!/bin/bash
+set -euo pipefail
+
+eval "$(conda shell.bash hook)"
+conda activate bowtie2_env
+
+FASTQ_PATH="/media/Kirk/gabicas_thais/Sialocat_metagenome/filtered_fastq_files"
+GENOME_INDEX_PATH="/media/Kirk/gabicas_thais/Sialocat_metagenome/human_genome/CHM13_index"
+OUTPUT_PATH="/media/Kirk/gabicas_thais/Sialocat_metagenome/cleaned_reads"
+LOG_FILE="${OUTPUT_PATH}/processing2.log"
+
+mkdir -p "$OUTPUT_PATH"
+
+echo "Starting processing at $(date)" >> "$LOG_FILE"
+
+for FILE in "$FASTQ_PATH"/*.fastq.gz; do
+    BASENAME=$(basename "$FILE" .fastq.gz)
+    
+    echo "Processing $BASENAME..." >> "$LOG_FILE"
+    
+    if bowtie2 -x "$GENOME_INDEX_PATH" \
+        -U "$FILE" \
+        --threads 10 \
+        --very-sensitive-local \
+        2>> "${OUTPUT_PATH}/${BASENAME}.bowtie2.log" \
+        | samtools view -@ 10 -b -f 4 - \
+        | samtools fastq -@ 10 - \
+        | gzip > "${OUTPUT_PATH}/${BASENAME}_clean.fastq.gz"; then
+        
+        echo "  <E2><9C><93> Success: $BASENAME ($(date +%H:%M:%S))" >> "$LOG_FILE"
+    else
+        echo "  <E2><9C><97> FAILED: $BASENAME ($(date +%H:%M:%S))" >> "$LOG_FILE"
+    fi
+done
+
+echo "Completed at $(date)" >> "$LOG_FILE"
